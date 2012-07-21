@@ -4,10 +4,18 @@ require 'sinatra/synchrony'
 require 'em-synchrony/em-http'
 require 'twilio-rb'
 require 'soundcloud'
+require 'data_mapper'
 
 Twilio::Config.setup \
   account_sid: ENV['TWILIO_ACCOUNT_SID'],
   auth_token:  ENV['TWILIO_AUTH_TOKEN']
+
+class Recording
+  include DataMapper::Resource
+
+  property :id,         Serial
+  property :sid,        String
+end
 
 get '/' do
   haml :index
@@ -28,18 +36,19 @@ post '/record' do
 
         audio = EM::HttpRequest.new(url + ".mp3").get.response
 
+        puts "audio is #{audio}"
+
         soundcloud.post '/tracks', track: {
           title:      "Message from *******#{params['From'][-4,4]}",
           asset_data: Tempfile.new('recording').tap { |f| f.binmode; f.write audio; f.rewind }
         }
 
-        #recording_sid = url.split('/').last
-        #Twilio::Recording.find(recording_sid).destroy
+        puts "sound uploaded"
       end
     end.resume
   end
 
-  status 200
+  Twilio::TwiML.build
 end
 
 def soundcloud
