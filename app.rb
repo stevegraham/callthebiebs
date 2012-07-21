@@ -38,14 +38,11 @@ post '/record' do
 
         audio = EM::HttpRequest.new(url + ".mp3").get.response
 
-        puts "audio is #{audio}"
-
         soundcloud.post '/tracks', track: {
           title:      "Message from *******#{params['From'][-4,4]}",
           asset_data: Tempfile.new('recording').tap { |f| f.binmode; f.write audio; f.rewind }
         }
 
-        puts "sound uploaded"
       end
     end.resume
   end
