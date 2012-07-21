@@ -33,6 +33,8 @@ post '/record' do
   EM.next_tick do
     Fiber.new do
       if url = params['RecordingUrl']
+        # Race condition in Twilio API #AWKWARD!
+        EM::Synchrony.sleep(1)
 
         audio = EM::HttpRequest.new(url + ".mp3").get.response
 
