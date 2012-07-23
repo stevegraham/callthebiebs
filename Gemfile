@@ -1,10 +1,10 @@
 source :rubygems
 
 gem 'sinatra'
-gem 'sinatra-synchrony'
+gem 'sinatra-synchrony', git: 'git://github.com/kyledrake/sinatra-synchrony.git'
 gem 'thin'
 gem 'twilio-rb'
-gem 'soundcloud', git: 'git://github.com/andrejj/soundcloud-ruby.git'
+gem 'soundcloud',        git: 'git://github.com/andrejj/soundcloud-ruby.git'
 gem 'pusher'
 gem 'haml'
-gem 'data_mapper'
+gem 'em-hiredis'

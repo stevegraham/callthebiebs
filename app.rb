@@ -2,22 +2,23 @@ require 'bundler'
 require 'sinatra'
 require 'sinatra/synchrony'
 require 'em-synchrony/em-http'
+require 'em-synchrony/em-hiredis'
 require 'twilio-rb'
 require 'soundcloud'
-require 'data_mapper'
+require 'pusher'
 
 Twilio::Config.setup \
   account_sid: ENV['TWILIO_ACCOUNT_SID'],
   auth_token:  ENV['TWILIO_AUTH_TOKEN']
 
-class Recording
-  include DataMapper::Resource
-
-  property :id,         Serial
-  property :sid,        String
-end
+Pusher.url    = ENV['PUSHER_API_URL']
+Pusher.key    = ENV['PUSHER_KEY']
+Pusher.secret = ENV['PUSHER_SECRET']
+Pusher.app_id = ENV['PUSHER_APP_ID']
 
 get '/' do
+  @recordings = redis.lrange 'recordings', 0, 24
+  @pusher_url = URI.parse ENV['PUSHER_WS_URL']
   haml :index
 end
 
@@ -38,10 +39,13 @@ post '/record' do
 
         audio = EM::HttpRequest.new(url + ".mp3").get.response
 
-        soundcloud.post '/tracks', track: {
+        sound = soundcloud.post('/tracks', track: {
           title:      "Message from *******#{params['From'][-4,4]}",
           asset_data: Tempfile.new('recording').tap { |f| f.binmode; f.write audio; f.rewind }
-        }
+        })
+
+        redis.lpush 'recordings', sound[:uri]
+        Pusher['iloveyoubiebs'].trigger_async 'new_recording', uri: sound[:uri]
 
       end
     end.resume
@@ -56,5 +60,9 @@ def soundcloud
     client_secret: ENV['SOUNDCLOUD_CLIENT_SECRET'],
     username:      ENV['SOUNDCLOUD_USERNAME'],
     password:      ENV['SOUNDCLOUD_PASSWORD']
+end
+
+def redis
+  @redis ||= EM::Hiredis.connect ENV['REDISTOGO_URL']
 end
 

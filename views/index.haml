@@ -4,6 +4,8 @@
   %head
     %title I <3 U Biebs
 
+    %script{ src: "http://js.pusher.com/1.12/pusher.min.js" }
+
   %body
     %container
       %h1 Leave a voicemail for Justin Bieber
@@ -11,3 +13,19 @@
       %p Every day Justin will choose his favourite messages and phone the caller back for a 5 minute chat. So what are you waiting for? Get dialling!
 
       %ul#messages
+        - @recordings.each do |recording|
+          %li
+            %iframe{ width: "100%", height: "166", scrolling: "no", frameborder: "no", src: "http://w.soundcloud.com/player/?url=#{CGI.escape recording}&show_artwork=false" }
+
+
+    :javascript
+      Pusher.host     = '#{@pusher_url.host}';
+      Pusher.ws_port  = '#{@pusher_url.port}';
+      Pusher.log      = function(data) { console.log('\t\t', data) };
+
+      var pusher      = new Pusher('#{ENV["PUSHER_KEY"]}');
+
+      pusher.bind('pusher:error', function(data) { alert(data['message']) })
+
+      var myChannel   = pusher.subscribe('iloveyoubiebs');
+
