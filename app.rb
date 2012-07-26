@@ -44,7 +44,8 @@ post '/record' do
         })
 
         redis.lpush 'recordings', sound[:uri]
-        EM::Synchrony.add_timer(10) { Pusher['iloveyoubiebs'].trigger_async 'new_recording', uri: CGI.escape(sound[:uri]) }
+        # Temp remove this. SoundCloud takes way too long to get files ready for a real-time element to be practical
+        # Pusher['iloveyoubiebs'].trigger_async 'new_recording', uri: CGI.escape(sound[:uri])
 
         Twilio::SMS.create to: params['From'], from: params['To'],
           body: "Thanks for Beliebing. Go to http://iloveyoubiebs.herokuapp.com to hear and share your favorite messages! <3"
