@@ -1,0 +1,48 @@
+/* @override http://0.0.0.0:5000/stylesheets/screen.css */
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+	color: #aaf;
+	background: #eaeaff;
+}
+
+h1 {
+ text-align: center;
+ font-family: 'Lobster', cursive;
+ font-size: 40px;
+ color: #e66;
+}
+
+#container > h2 {
+	display: inline-block;
+	margin: 10px 15px;
+	font-size: 30px;
+}
+
+#container {
+	width: 600px;
+	margin: 35px auto 50px;
+}
+
+#container > * {
+	margin: 20px 0;
+}
+
+#container ul {
+	margin: 35px 0;
+}
+
+ul li {
+	margin: 20px 0;
+	list-style-type: none;
+}
+
+ul li iframe {
+	box-shadow: 0px 1px 2px #444;
+	background: #fafafa;
+}

@@ -5,12 +5,14 @@
     %title I <3 U Biebs
 
     %script{ src: "http://js.pusher.com/1.12/pusher.min.js" }
+    %link{ href: 'http://fonts.googleapis.com/css?family=Lobster', rel: 'stylesheet', type: 'text/css' }
+    %link{ href: "/stylesheets/screen.css", rel: 'stylesheet' }
 
   %body
-    %container
+    #container
       %h1 Leave a voicemail for Justin Bieber
-      %h2 020 3322 3162
-      %p Every day Justin will choose his favourite messages and phone the caller back for a 5 minute chat. So what are you waiting for? Get dialling!
+      %h2 US: 415-367-3925
+      %h2 UK: 020 3322 3162
 
       %ul#messages
         - @recordings.each do |recording|
