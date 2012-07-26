@@ -5,6 +5,7 @@
     %title I <3 U Biebs
 
     %script{ src: "http://js.pusher.com/1.12/pusher.min.js" }
+    %script{ src: "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" }
     %link{ href: 'http://fonts.googleapis.com/css?family=Lobster', rel: 'stylesheet', type: 'text/css' }
     %link{ href: "/stylesheets/screen.css", rel: 'stylesheet' }
 
@@ -27,7 +28,12 @@
 
       var pusher      = new Pusher('#{ENV["PUSHER_KEY"]}');
 
-      pusher.bind('pusher:error', function(data) { alert(data['message']) })
+      pusher.bind('pusher:error', function(data) { alert(data['message']) });
 
-      var myChannel   = pusher.subscribe('iloveyoubiebs');
+      var channel   = pusher.subscribe('iloveyoubiebs');
+
+      channel.bind('new_recording', function(data) {
+        var li = $("<li><iframe frameborder='no' height='166' scrolling='no' src='http://w.soundcloud.com/player/?url=" + data['uri'] + "&show_artwork=false' width='100%'></iframe></li>");
+        $('#messages').prepend(li);
+      })
 
