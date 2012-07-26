@@ -44,7 +44,7 @@ post '/record' do
         })
 
         redis.lpush 'recordings', sound[:uri]
-        Pusher['iloveyoubiebs'].trigger_async 'new_recording', uri: CGI.escape(sound[:uri])
+        EM::Synchrony.add_timer(3) { Pusher['iloveyoubiebs'].trigger_async 'new_recording', uri: CGI.escape(sound[:uri]) }
 
         Twilio::SMS.create to: params['From'], from: params['To'],
           body: "Thanks for Beliebing. Go to http://iloveyoubiebs.herokuapp.com to hear and share your favorite messages! <3"
