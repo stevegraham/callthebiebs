@@ -26,7 +26,6 @@ post '/voice' do
   Twilio::TwiML.build do |r|
     r.say 'leave a message for justin bieber after the beep', voice: 'woman'
     r.record action: '/record', max_length: 30
-    r.say 'thanks! goodbye', voice: 'woman'
   end
 end
 
@@ -54,7 +53,7 @@ post '/record' do
     end.resume
   end
 
-  Twilio::TwiML.build
+  Twilio::TwiML.build { |r| r.say 'thanks! goodbye', voice: 'woman' }
 end
 
 def soundcloud
