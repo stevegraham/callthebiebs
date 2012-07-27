@@ -7,6 +7,8 @@ require 'twilio-rb'
 require 'soundcloud'
 require 'pusher'
 
+REDIS = EM::Hiredis.connect ENV['REDISTOGO_URL']
+
 Twilio::Config.setup \
   account_sid: ENV['TWILIO_ACCOUNT_SID'],
   auth_token:  ENV['TWILIO_AUTH_TOKEN']
@@ -65,7 +67,5 @@ def soundcloud
     password:      ENV['SOUNDCLOUD_PASSWORD']
 end
 
-def redis
-  @redis ||= EM::Hiredis.connect ENV['REDISTOGO_URL']
-end
+
 
