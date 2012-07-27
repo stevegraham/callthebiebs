@@ -17,7 +17,7 @@ Pusher.secret = ENV['PUSHER_SECRET']
 Pusher.app_id = ENV['PUSHER_APP_ID']
 
 get '/' do
-  @recordings = redis.lrange 'recordings', 0, 24
+  @recordings = soundcloud.get('/me/tracks').map &:uri #redis.lrange 'recordings', 0, 24
   @pusher_url = URI.parse ENV['PUSHER_WS_URL']
   haml :index
 end
